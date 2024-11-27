@@ -3,7 +3,7 @@ from .views import *
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
-router.register('', MangaViewSet, )
+router.register('mangas', MangaViewSet, )
 
 urlpatterns = [
     path('manga-list/', MangaListView.as_view()),

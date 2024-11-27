@@ -4,7 +4,7 @@ from .views import *
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
-router.register('', CommentViewSet, )
+router.register('comments', CommentViewSet, )
 # router.register('like', CommentLikeViewSet, )
 
 urlpatterns = [
