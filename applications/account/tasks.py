@@ -6,15 +6,14 @@ from django.core.mail import send_mail
 def send_activation_mail(email, activation_code):
     activation_url = f'http://localhost:8000/account/activate/{activation_code}/'
     message = f'''
-    Спасибо за регистрацию!
-    Активируйте аккаунт!
-    Активационная ссылка: {activation_url}
+    Йоо броски, отдуши за регистрацию.
+    Вот твоя ссылка: {activation_url}, активируй свой аккаунт по ней.
     '''
 
     send_mail(
         'Activate your account',
         message,
-        'test@umanga.kg',
+        'kimyunsopbi@gmail.com',
         [email, ],
         fail_silently=False
     )
