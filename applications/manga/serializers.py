@@ -42,7 +42,7 @@ class LikeSerializer(serializers.ModelSerializer):
 class MangaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Manga
-        fields = ('id', 'title', 'status', )
+        fields = ('id', 'title', 'description','image','author','status', 'creator','category','tag','genre','like',)
 
     def create(self, validated_data):
         request = self.context.get('request')

@@ -8,17 +8,34 @@ User = get_user_model()
 
 
 class RegisterSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(
+        required=True,
+        min_length=2,
+        max_length=50,
+        error_messages={
+            "required": "Имя пользователя обязательно для заполнения.",
+            "min_length": "Имя пользователя должно содержать минимум 2 символа.",
+            "max_length": "Имя пользователя не должно превышать 50 симв     лов."
+        },
+    )
     password = serializers.CharField(min_length=6, write_only=True)
     password_confirmation = serializers.CharField(min_length=6, write_only=True)
 
     class Meta:
         model = User
-        fields = ('email', 'password', 'password_confirmation')
+        fields = ('email', 'username', 'password', 'password_confirmation')
 
     def validate_email(self, email):
         if User.objects.filter(email=email).exists():
             raise serializers.ValidationError('Пользователь с таким мейлом уже существует')
         return email
+    
+    def validate_username(self, username):
+        if not username.strip():
+            raise serializers.ValidationError('Имя пользователя не может быть пустым или состоять только из пробелов.')
+        if User.objects.filter(username=username).exists():
+            raise serializers.ValidationError('Пользователь с таким именем уже существует')
+        return username
 
     def validate(self, validated_data):
         password = validated_data.get('password')
@@ -30,21 +47,21 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         email = validated_data.get('email')
         password = validated_data.get('password')
-        user = User.objects.create_user(email=email, password=password)
+        username = validated_data.get('username')
+        user = User.objects.create_user(email=email, username=username, password=password)
         send_activation_mail(user.email, user.activation_code)
         return user
 
 class LoginSerializer(serializers.Serializer):
-    email = serializers.EmailField()
+    username = serializers.CharField(min_length=1)
     password = serializers.CharField(style= {'input_type':'password'}, trim_whitespace=False)
 
     def validate(self, attrs):
-        email = attrs.get('email')
+        username = attrs.get('username')
         password = attrs.get('password')
 
-        if email and password:
-            user = authenticate(request=self.context.get('request'), username=email, password=password)
-
+        if username and password:
+            user = authenticate(request=self.context.get('request'), username=username, password=password)
             if not user:
                 msg = 'Невозможно войти в систему с предоставленными учетными данными'
                 raise serializers.ValidationError(msg, code='authorization')
