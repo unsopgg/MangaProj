@@ -10,7 +10,7 @@ class ChapterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         request = self.context.get('request')
-        validated_data['creator_id'] = request.user.id
+        validated_data['creator_id'] = request.user.id      
         manga = Chapter.objects.create(**validated_data)
         return manga
 

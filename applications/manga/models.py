@@ -35,7 +35,7 @@ class Manga(models.Model):
     genre = models.ForeignKey(Genre, on_delete=models.CASCADE, related_name='manga', null=True)
     description = models.TextField()
     image = models.ImageField(upload_to='')
-    author = models.CharField(max_length=50)
+    author = models.CharField(max_length=50)    
     status = models.CharField(max_length=15, choices=STATUS_CHOICES)
 
     def __str__(self):
